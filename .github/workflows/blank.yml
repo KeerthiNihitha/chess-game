@@ -1,0 +1,98 @@
+
+# Simple Chess Game in Python
+
+# Constants for chess pieces
+WHITE_PAWN = 'P'
+WHITE_ROOK = 'R'
+WHITE_KNIGHT = 'N'
+WHITE_BISHOP = 'B'
+WHITE_QUEEN = 'Q'
+WHITE_KING = 'K'
+
+BLACK_PAWN = 'p'
+BLACK_ROOK = 'r'
+BLACK_KNIGHT = 'n'
+BLACK_BISHOP = 'b'
+BLACK_QUEEN = 'q'
+BLACK_KING = 'k'
+
+# Initialize the chessboard
+def initialize_board():
+    board = [
+        ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+        ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+        ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+    ]
+    return board
+
+# Display the chessboard
+def print_board(board):
+    print("\n  a b c d e f g h")
+    print("  ----------------")
+    row_number = 8
+    for row in board:
+        print(f"{row_number}|", end=" ")
+        for piece in row:
+            print(piece, end=" ")
+        print(f"|{row_number}")
+        row_number -= 1
+    print("  ----------------")
+    print("  a b c d e f g h")
+
+# Convert move notation to board indices
+def move_notation_to_indices(move):
+    columns = "abcdefgh"
+    rows = "87654321"
+    if len(move) == 4:
+        from_col = columns.index(move[0])
+        from_row = rows.index(move[1])
+        to_col = columns.index(move[2])
+        to_row = rows.index(move[3])
+        return from_row, from_col, to_row, to_col
+    return None
+
+# Check if a move is valid
+def is_valid_move(board, from_row, from_col, to_row, to_col, current_turn):
+    piece = board[from_row][from_col]
+    if piece == ' ':
+        return False
+    if current_turn == "white" and piece.islower():
+        return False
+    if current_turn == "black" and piece.isupper():
+        return False
+    return True
+
+# Make a move on the board
+def make_move(board, from_row, from_col, to_row, to_col):
+    piece = board[from_row][from_col]
+    board[to_row][to_col] = piece
+    board[from_row][from_col] = ' '
+
+# Main function to play the chess game
+def play_chess():
+    board = initialize_board()
+    current_turn = "white"
+    
+    while True:
+        print_board(board)
+        print(f"{current_turn.capitalize()}'s turn.")
+        move = input("Enter your move (e.g., e2e4): ").strip()
+        indices = move_notation_to_indices(move)
+        
+        if indices:
+            from_row, from_col, to_row, to_col = indices
+            if is_valid_move(board, from_row, from_col, to_row, to_col, current_turn):
+                make_move(board, from_row, from_col, to_row, to_col)
+                current_turn = "black" if current_turn == "white" else "white"
+            else:
+                print("Invalid move. Try again.")
+        else:
+            print("Invalid move notation. Try again.")
+
+# Start the game
+play_chess()
